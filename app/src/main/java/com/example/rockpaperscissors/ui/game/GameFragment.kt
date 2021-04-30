@@ -22,6 +22,7 @@ import com.example.rockpaperscissors.ui.main.MainFragment
 import google.example.GRequest
 import google.example.GRequest.Player
 import google.example.GResponse
+import kotlinx.coroutines.selects.select
 
 class GameFragment : Fragment() {
 
@@ -37,7 +38,7 @@ class GameFragment : Fragment() {
     }
 
     private val _name by lazy {requireArguments().getString(NAME)}
-    private val _isHost by lazy {requireArguments().getBoolean(HOST)}
+    private var _isHost: Boolean = false
 
     private lateinit var player: Player
 
@@ -47,11 +48,13 @@ class GameFragment : Fragment() {
 
     private var TIMEOUT = 0
     private lateinit var playerAdapter:PlayerAdapter
+    private var playerInfos: ArrayList<PlayerInfo> = ArrayList() //참여자 정보
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         gameFragmentBinding = GameFragmentBinding.inflate(inflater, container, false)
+        _isHost = requireArguments().getBoolean(HOST)
         return binding.root
     }
 
@@ -66,9 +69,18 @@ class GameFragment : Fragment() {
 
         }
         binding.lottie.visibility = View.GONE
-        binding.buttonRock.setOnClickListener{ sendItem(GRequest.Select.ROCK) }
-        binding.buttonPaper.setOnClickListener{ sendItem(GRequest.Select.PAPER) }
-        binding.buttonScissor.setOnClickListener{ sendItem(GRequest.Select.SCISSOR) }
+        binding.buttonRock.setOnClickListener{
+            selectButton(it)
+            sendItem(GRequest.Select.ROCK)
+        }
+        binding.buttonPaper.setOnClickListener{
+            selectButton(it)
+            sendItem(GRequest.Select.PAPER)
+        }
+        binding.buttonScissor.setOnClickListener{
+            selectButton(it)
+            sendItem(GRequest.Select.SCISSOR)
+        }
 
         binding.buttonStart.setOnClickListener{ viewModel.reqToServer(GRequest.MessageType.HOST_GAME_START, player, GRequest.Select.NONE) }
 
@@ -79,15 +91,50 @@ class GameFragment : Fragment() {
         setObserver()
     }
 
+    private fun selectButton(it: View) {
+        it.isSelected = true
+        it.setBackgroundColor(resources.getColor(R.color.orange_500))
+        when(it){
+            binding.buttonRock ->{
+                binding.buttonPaper.apply {
+                    isSelected = false
+                    setBackgroundColor(resources.getColor(android.R.color.transparent))
+                }
+                binding.buttonScissor.apply {
+                    isSelected = false
+                    setBackgroundColor(resources.getColor(android.R.color.transparent))
+                }
+            }
+            binding.buttonPaper ->{
+                binding.buttonRock.apply {
+                    isSelected = false
+                    setBackgroundColor(resources.getColor(android.R.color.transparent))
+                }
+                binding.buttonScissor.apply {
+                    isSelected = false
+                    setBackgroundColor(resources.getColor(android.R.color.transparent))
+                }
+            }
+            binding.buttonScissor ->{
+                binding.buttonPaper.apply {
+                    isSelected = false
+                    setBackgroundColor(resources.getColor(android.R.color.transparent))
+                }
+                binding.buttonRock.apply {
+                    isSelected = false
+                    setBackgroundColor(resources.getColor(android.R.color.transparent))
+                }
+            }
+        }
+    }
+
 
     override fun onDestroy() {
-        Log.d("hjhj","onDestroy")
         viewModel.disConnect()
         super.onDestroy()
     }
 
     private fun sendItem(select: GRequest.Select) {
-        rspButtonVisibility(false)
         viewModel.reqToServer(GRequest.MessageType.SELECT, player, select)
     }
 
@@ -104,9 +151,16 @@ class GameFragment : Fragment() {
                 GResponse.MessageType.RESULT -> { resultGame(it) }
                 GResponse.MessageType.DRAW -> { resultGame(it) }
                 GResponse.MessageType.LEAVE -> { leaveGame() }
-                GResponse.MessageType.CHANGE_HOST -> {  }
+                GResponse.MessageType.CHANGE_HOST -> { changeHost() }
             }
         })
+    }
+
+    private fun changeHost() {
+        val host = viewModel.hostStatus
+        playerInfos.filter { it.isHost == View.VISIBLE }.forEach{it.isHost = View.GONE}
+        playerInfos.filter { it.name == host.name }.forEach{it.isHost = View.VISIBLE}
+        _isHost = playerInfos.any { it.name == player.name }
     }
 
     private fun resultGame(message: GResponse.MessageType) {
@@ -127,9 +181,9 @@ class GameFragment : Fragment() {
                 }
             }
             GResponse.MessageType.DRAW -> { playLottie(R.raw.draw, true, "비겼어요!")}
-            GResponse.MessageType.CHANGE_HOST->{}
         }
-
+        //host정보 변경
+        playerAdapter.submitList(playerInfos)
     }
 
     private fun leaveGame() {
@@ -179,9 +233,7 @@ class GameFragment : Fragment() {
     }
 
     private fun setPlayerInfo() {
-        //todo 서버리턴 데이터를 보면서 맞추기
         val list = viewModel.playerList
-        var playerInfos: ArrayList<PlayerInfo> = ArrayList()
         list.forEach {
             val playerInfo = PlayerInfo(
                 ip = it.ip,

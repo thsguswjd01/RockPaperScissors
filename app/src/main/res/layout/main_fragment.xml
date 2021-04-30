@@ -72,8 +72,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="게임입장"
+                    android:text="참 가"
                     app:layout_constraintTop_toBottomOf="@+id/textField_name" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_rank"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:icon="@drawable/ic_rank"
+                    app:iconGravity="textStart"
+                    android:text="랭킹보기"
+                    app:layout_constraintTop_toBottomOf="@+id/button_start" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

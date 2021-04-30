@@ -1,6 +1,7 @@
 package com.example.rockpaperscissors.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.rockpaperscissors.MainActivity
+import com.example.rockpaperscissors.R
 import com.example.rockpaperscissors.databinding.MainFragmentBinding
+import com.example.rockpaperscissors.manage.AppManage
 import com.example.rockpaperscissors.ui.game.GameFragment
+import com.example.rockpaperscissors.ui.rank.RankFragment
 import google.example.Welecom
 
 
@@ -42,6 +46,11 @@ class MainFragment : Fragment() {
             }
         }
 
+        binding.buttonRank.setOnClickListener {
+            if(binding.textFieldName.editText?.text.toString() != "") {
+                viewRank()
+            }
+        }
         viewModel.loginStatus.observe(this, Observer {
             when(it){
                 Welecom.Status.WAIT -> {
@@ -64,21 +73,23 @@ class MainFragment : Fragment() {
                 }
             }
         })
+    }
 
-
+    private fun viewRank() {
+        if(!AppManage.instanceStubFactory().isInit()) viewModel.connect(binding.textFieldIp.editText?.text.toString(), binding.textFieldPort.editText?.text.toString().toInt())
+        (activity as MainActivity?)!!.replaceFragment(RankFragment.newInstance(binding.textFieldName.editText?.text.toString()))
     }
 
     private fun startGame(isHost: Boolean) {
         (activity as MainActivity?)!!.replaceFragment(GameFragment.newInstance(binding.textFieldName.editText?.text.toString(), isHost))
+        viewModel.loginStatus.value = null
     }
 
     private fun loginGame() {
         binding.constraintLoading.visibility = View.VISIBLE
+        if(!AppManage.instanceStubFactory().isInit()) viewModel.connect(binding.textFieldIp.editText?.text.toString(), binding.textFieldPort.editText?.text.toString().toInt())
+        viewModel.grpcLogin(binding.textFieldName.editText?.text.toString(), binding.textFieldIp.editText?.text.toString())
 
-        viewModel.login(
-            binding.textFieldIp.editText?.text.toString(),
-            binding.textFieldPort.editText?.text.toString().toInt(),
-            binding.textFieldName.editText?.text.toString())
     }
 
     override fun onDestroyView() {

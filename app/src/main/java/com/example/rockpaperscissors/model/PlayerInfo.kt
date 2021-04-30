@@ -14,7 +14,7 @@ data class PlayerInfo(
     companion object{
         val diffCallback = object : DiffUtil.ItemCallback<PlayerInfo>(){
             override fun areItemsTheSame(oldItem: PlayerInfo, newItem: PlayerInfo): Boolean {
-                return oldItem.ip == oldItem.ip
+                return oldItem.name == newItem.name
             }
 
             override fun areContentsTheSame(oldItem: PlayerInfo, newItem: PlayerInfo): Boolean {

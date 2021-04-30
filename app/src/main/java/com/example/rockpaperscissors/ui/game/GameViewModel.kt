@@ -64,7 +64,6 @@ class GameViewModel: ViewModel() {
 
     fun disConnect(){
         requestObserver.onCompleted()
-        AppManage.instanceStubFactory().shutdownChannel()
     }
 
 }

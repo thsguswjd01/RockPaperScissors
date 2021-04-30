@@ -21,16 +21,12 @@ class MainViewModel : ViewModel() {
 
     fun getClientType() = clientType
 
-    fun login(host: String, port: Int, name: String) {
+    fun connect(host: String, port: Int){
         clientStubFactory = AppManage.instanceStubFactory()
         clientStubFactory.init(host,port)
-
-        grpcLogin(name, IPadress().getIP())
-//        clientStubFactory.shutdownChannel()*/
     }
 
-
-    private fun grpcLogin(clientName: String, clientIP: String) {
+    fun grpcLogin(clientName: String, clientIP: String) {
 
         val request: Gamer = Gamer.newBuilder().setName(clientName).setIp(clientIP).build()
         var responseIterator: Iterator<Welecom?>

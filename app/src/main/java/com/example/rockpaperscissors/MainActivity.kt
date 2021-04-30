@@ -3,6 +3,7 @@ package com.example.rockpaperscissors
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.rockpaperscissors.manage.AppManage
 import com.example.rockpaperscissors.ui.main.MainFragment
 
 
@@ -20,10 +21,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun replaceFragment(fragment: Fragment?) {
-        supportFragmentManager.beginTransaction().replace(R.id.container, fragment!!).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.container, fragment!!).addToBackStack(null).commit()
     }
 
     override fun onDestroy() {
+        AppManage.instanceStubFactory().shutdownChannel()
         super.onDestroy()
     }
 }

@@ -33,4 +33,6 @@ class GameStubFactory() {
     fun getAsyncStub(): RspApplicationStub = asyncStub
 
     fun getFutureStub(): RspApplicationFutureStub = futureStub
+
+    fun isInit(): Boolean = this::channel.isInitialized
 }
