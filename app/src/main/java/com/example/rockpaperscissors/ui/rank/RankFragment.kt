@@ -26,7 +26,7 @@ class RankFragment : Fragment() {
         }
     }
 
-    private val _name by lazy {requireArguments().getString(NAME)}
+    private val _name by lazy { requireArguments().getString(NAME) }
 
     private lateinit var rankFragmentBinding: RankFragmentBinding
     private val binding get() = rankFragmentBinding

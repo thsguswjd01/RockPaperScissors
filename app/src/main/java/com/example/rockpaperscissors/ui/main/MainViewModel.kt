@@ -12,7 +12,7 @@ import io.grpc.stub.StreamObserver
 
 class MainViewModel : ViewModel() {
 
-    var TOAST= MutableLiveData<String>()
+    var TOAST = MutableLiveData<String>()
     var loginStatus = MutableLiveData<Welecom.Status>()
 
     private lateinit var clientType: Welecom.ClientType
@@ -21,9 +21,9 @@ class MainViewModel : ViewModel() {
 
     fun getClientType() = clientType
 
-    fun connect(host: String, port: Int){
+    fun connect(host: String, port: Int) {
         clientStubFactory = AppManage.instanceStubFactory()
-        clientStubFactory.init(host,port)
+        clientStubFactory.init(host, port)
     }
 
     fun grpcLogin(clientName: String, clientIP: String) {
@@ -34,20 +34,17 @@ class MainViewModel : ViewModel() {
             request,
             object : StreamObserver<Welecom> {
                 override fun onNext(response: Welecom) {
-                    Log.d("hjhj","Async Server Streaming 서버로부터의 응답 " + response.status+""+response.ctype)
+                    Log.d("hjhj", response.status.toString() + "\n" + response.ctype)
                     loginStatus.postValue(response.status)
                     clientType = response.ctype
                 }
 
                 override fun onError(t: Throwable) {
-                    Log.d("hjhj","Async Server Streaming responseObserver.onError() 호출됨")
-                    Log.d("hjhj",t.message.toString())
+                    Log.e("hjhj", t.message.toString())
                     loginStatus.postValue(Welecom.Status.UNRECOGNIZED)
                 }
 
-                override fun onCompleted() {
-                    Log.d("hjhj","Async Server Streaming 서버 응답 completed")
-                }
+                override fun onCompleted() {}
             }
         )
     }

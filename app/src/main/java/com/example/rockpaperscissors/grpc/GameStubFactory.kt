@@ -24,7 +24,6 @@ class GameStubFactory() {
 
     @Throws(InterruptedException::class)
     fun shutdownChannel() {
-        Log.d("hjhj","gRPC Channel shutdown...")
         channel.shutdown().awaitTermination(2, TimeUnit.SECONDS)
     }
 

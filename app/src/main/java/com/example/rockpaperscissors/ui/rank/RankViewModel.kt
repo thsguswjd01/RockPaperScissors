@@ -10,19 +10,17 @@ import google.example.RankList
 import io.grpc.stub.StreamObserver
 
 
-
-
 class RankViewModel : ViewModel() {
     private val clientStubFactory = AppManage.instanceStubFactory()
     var liveRankList = MutableLiveData<ArrayList<RankInfo>>()
     private lateinit var _rankList: ArrayList<RankInfo>
 
-    fun getRank(gamer: Gamer){
+    fun getRank(gamer: Gamer) {
         Log.d("hjhj", gamer.toString())
-        clientStubFactory.getAsyncStub().rank(gamer, object : StreamObserver<RankList>{
+        clientStubFactory.getAsyncStub().rank(gamer, object : StreamObserver<RankList> {
             override fun onNext(value: RankList) {
                 Log.d("hjhj", value.toString())
-                value.rankerList.forEach{
+                value.rankerList.forEach {
                     val rankInfo = RankInfo(
                         it.name,
                         it.score,

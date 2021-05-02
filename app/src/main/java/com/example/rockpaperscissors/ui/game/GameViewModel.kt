@@ -12,7 +12,7 @@ import io.grpc.stub.StreamObserver
 import java.lang.Exception
 
 
-class GameViewModel: ViewModel() {
+class GameViewModel : ViewModel() {
     private val clientStubFactory = AppManage.instanceStubFactory()
     private lateinit var requestObserver: StreamObserver<GRequest>
 
@@ -26,43 +26,44 @@ class GameViewModel: ViewModel() {
     fun connectGame() {
         // 서버에 보낼 콜백 객체
         val responseObserver: StreamObserver<GResponse> = object : StreamObserver<GResponse> {
-                override fun onNext(response: GResponse) {
-                    Log.d("hjhj", "$response")
-                    responseMessageStatus.postValue(response.messageType)
-                    playerList = response.playerList
-                    timeoutStatus.postValue(response.timeoutInfo)
-                    timeoutCount = response.timeoutCount
-                    hostStatus = response.hostPlayer
-                    resultStatus = response.result
-
-                }
-
-                override fun onError(t: Throwable) {
-                    Log.d("hjhj","Bidirectional Streaming responseObserver.onError() 호출됨"+t.localizedMessage)
-                    Log.d("hjhj", t.cause.toString())
-                    Log.d("hjhj", t.stackTrace.joinToString("\n"))
-                }
-
-                override fun onCompleted() {
-                    Log.d("hjhj","Bidirectional Streaming 서버 응답 completed")
-                }
+            override fun onNext(response: GResponse) {
+                Log.d("hjhj", "$response")
+                responseMessageStatus.postValue(response.messageType)
+                playerList = response.playerList
+                timeoutStatus.postValue(response.timeoutInfo)
+                timeoutCount = response.timeoutCount
+                hostStatus = response.hostPlayer
+                resultStatus = response.result
             }
+
+            override fun onError(t: Throwable) {
+                Log.d("hjhj", t.stackTrace.joinToString("\n"))
+            }
+
+            override fun onCompleted() {}
+        }
         requestObserver = clientStubFactory.getAsyncStub().game(responseObserver)
 
     }
 
-    fun reqToServer(messageType: GRequest.MessageType, player: GRequest.Player, select: GRequest.Select){
+    fun reqToServer(
+        messageType: GRequest.MessageType,
+        player: GRequest.Player,
+        select: GRequest.Select
+    ) {
         try {
-            requestObserver.onNext(GRequest.newBuilder()
-                .setMessageType(messageType)
-                .setPlayer(player)
-                .setSelect(select).build())
-        }catch (e: Exception){
+            requestObserver.onNext(
+                GRequest.newBuilder()
+                    .setMessageType(messageType)
+                    .setPlayer(player)
+                    .setSelect(select).build()
+            )
+        } catch (e: Exception) {
             requestObserver.onError(e)
         }
     }
 
-    fun disConnect(){
+    fun disConnect() {
         requestObserver.onCompleted()
     }
 
