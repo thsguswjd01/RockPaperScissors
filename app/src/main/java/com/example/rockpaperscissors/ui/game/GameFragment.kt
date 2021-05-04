@@ -22,6 +22,7 @@ import com.example.rockpaperscissors.ui.main.MainFragment
 import google.example.GRequest
 import google.example.GRequest.Player
 import google.example.GResponse
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.selects.select
 
 class GameFragment : Fragment() {
@@ -110,12 +111,12 @@ class GameFragment : Fragment() {
                     setBackgroundColor(activity!!.getColor(android.R.color.transparent))
                 }
                 binding.buttonScissor.apply {
-                    sendItem(GRequest.Select.SCISSOR)
                     isSelected = false
                     setBackgroundColor(activity!!.getColor(android.R.color.transparent))
                 }
             }
             binding.buttonScissor -> {
+                sendItem(GRequest.Select.SCISSOR)
                 binding.buttonPaper.apply {
                     isSelected = false
                     setBackgroundColor(activity!!.getColor(android.R.color.transparent))
@@ -161,13 +162,29 @@ class GameFragment : Fragment() {
     }
 
     private fun changeHost() {
-        val host = viewModel.hostStatus
-        playerInfos.filter { it.isHost == View.VISIBLE }.forEach { it.isHost = View.GONE }
+        val host = viewModel.hostStatus //호스트정
+        playerInfos.forEach { it.isHost = View.GONE }
         playerInfos.filter { it.name == host.name }.forEach { it.isHost = View.VISIBLE }
-        _isHost = playerInfos.any { it.name == player.name }
+        _isHost = player.name == host.name
+        playerAdapter.submitList(playerInfos)
     }
 
     private fun resultGame(message: GResponse.MessageType) {
+        //버튼초기화
+        binding.buttonRock.apply {
+            isSelected = false
+            setBackgroundColor(activity!!.getColor(android.R.color.transparent))
+        }
+        binding.buttonPaper.apply {
+            isSelected = false
+            setBackgroundColor(activity!!.getColor(android.R.color.transparent))
+        }
+        binding.buttonScissor.apply {
+            isSelected = false
+            setBackgroundColor(activity!!.getColor(android.R.color.transparent))
+        }
+
+        //progress bar setting
         binding.progressTime.progress = TIMEOUT * 20
         setTimeoutAnim(false)
         rspButtonVisibility(true)
@@ -175,7 +192,6 @@ class GameFragment : Fragment() {
         when (message) {
             GResponse.MessageType.RESULT -> {
                 val winnerList = viewModel.resultStatus.winnerList!!
-
                 if (winnerList.any { it.equals(player.name) }) {
                     //winner
                     playLottie(R.raw.win, true, "이겼어요! +15점")
@@ -197,7 +213,7 @@ class GameFragment : Fragment() {
         Toast.makeText(context, "LEAVE", Toast.LENGTH_SHORT).show()
         val leave_player = viewModel.playerList
 
-        if (leave_player.any { it.name == player.name }) {
+        if (leave_player.filter { it.name == player.name }.isNotEmpty()) {
             (activity as MainActivity?)!!.replaceFragment(MainFragment.newInstance())
         }
     }
@@ -216,7 +232,7 @@ class GameFragment : Fragment() {
     private fun setProgressbar() {
         TIMEOUT = viewModel.timeoutCount
 
-        setTimeoutAnim(true)
+
         binding.progressTime.apply {
             max = TIMEOUT * 20
             progress = TIMEOUT * 20
@@ -225,14 +241,12 @@ class GameFragment : Fragment() {
         val mCountDownTimer = object : CountDownTimer((TIMEOUT * 1000).toLong(), 50) {
             override fun onTick(millisUntilFinished: Long) {
                 i--
+                if (i == 340) setTimeoutAnim(true)
                 binding.progressTime.progress = i
             }
 
             override fun onFinish() {
-                //Do what you want
                 binding.progressTime.progress = 0
-                setTimeoutAnim(false)
-                sendItem(GRequest.Select.NONE)
             }
         }
         mCountDownTimer.start()
@@ -268,7 +282,7 @@ class GameFragment : Fragment() {
             binding.constraintHost.visibility = View.GONE
         }
         //접속 핑
-        viewModel.reqToServer(GRequest.MessageType.SELECT, player, GRequest.Select.NONE)
+        viewModel.reqToServer(GRequest.MessageType.NO, player, GRequest.Select.NONE)
         rspButtonVisibility(false)
     }
 
@@ -285,6 +299,7 @@ class GameFragment : Fragment() {
     }
 
     private fun playLottie(raw: Int, isFinished: Boolean, msg: String) {
+        var fin =  isFinished
         binding.textviewComment.apply {
             visibility = View.VISIBLE
             text = msg
@@ -298,7 +313,10 @@ class GameFragment : Fragment() {
                 override fun onAnimationEnd(animation: Animator) {
                     binding.textviewComment.visibility = View.GONE
                     visibility = View.GONE
-                    if (isFinished) setLoadingView()
+                    if (fin) {
+                        setLoadingView()
+                        fin = false
+                    }
                 }
 
                 override fun onAnimationCancel(animation: Animator) {}

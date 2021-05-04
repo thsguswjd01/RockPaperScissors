@@ -18,7 +18,7 @@ data class PlayerInfo(
             }
 
             override fun areContentsTheSame(oldItem: PlayerInfo, newItem: PlayerInfo): Boolean {
-                return oldItem == newItem
+                return false
             }
 
         }

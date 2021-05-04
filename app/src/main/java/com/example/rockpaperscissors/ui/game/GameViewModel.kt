@@ -27,17 +27,17 @@ class GameViewModel : ViewModel() {
         // 서버에 보낼 콜백 객체
         val responseObserver: StreamObserver<GResponse> = object : StreamObserver<GResponse> {
             override fun onNext(response: GResponse) {
-                Log.d("hjhj", "$response")
+                Log.d("responseObserver_hj", "$response")
                 responseMessageStatus.postValue(response.messageType)
                 playerList = response.playerList
                 timeoutStatus.postValue(response.timeoutInfo)
                 timeoutCount = response.timeoutCount
                 hostStatus = response.hostPlayer
-                resultStatus = response.result
+                resultStatus = GResponse.Result.newBuilder().build()
+                resultStatus =  response.result
             }
 
             override fun onError(t: Throwable) {
-                Log.d("hjhj", t.stackTrace.joinToString("\n"))
             }
 
             override fun onCompleted() {}
@@ -51,6 +51,7 @@ class GameViewModel : ViewModel() {
         player: GRequest.Player,
         select: GRequest.Select
     ) {
+        Log.d("hjhj", "req hj: $messageType$player$select")
         try {
             requestObserver.onNext(
                 GRequest.newBuilder()

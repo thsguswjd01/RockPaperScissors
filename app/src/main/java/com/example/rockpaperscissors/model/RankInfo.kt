@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 
 data class RankInfo (
     val name: String,
-    val score: Int,
-    val ranking: Int
+    val score: String,
+    val ranking: String
 ){
     companion object{
         val diffCallback = object : DiffUtil.ItemCallback<RankInfo>(){

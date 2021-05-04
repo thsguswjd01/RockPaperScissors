@@ -113,32 +113,40 @@ private static final long serialVersionUID = 0L;
   public enum MessageType
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
-     * <code>SELECT = 0;</code>
+     * <code>NO = 0;</code>
      */
-    SELECT(0),
+    NO(0),
     /**
-     * <code>HOST_GAME_START = 1;</code>
+     * <code>SELECT = 1;</code>
      */
-    HOST_GAME_START(1),
+    SELECT(1),
     /**
-     * <code>TIMEOUT_ACK = 2;</code>
+     * <code>HOST_GAME_START = 2;</code>
      */
-    TIMEOUT_ACK(2),
+    HOST_GAME_START(2),
+    /**
+     * <code>TIMEOUT_ACK = 3;</code>
+     */
+    TIMEOUT_ACK(3),
     UNRECOGNIZED(-1),
     ;
 
     /**
-     * <code>SELECT = 0;</code>
+     * <code>NO = 0;</code>
      */
-    public static final int SELECT_VALUE = 0;
+    public static final int NO_VALUE = 0;
     /**
-     * <code>HOST_GAME_START = 1;</code>
+     * <code>SELECT = 1;</code>
      */
-    public static final int HOST_GAME_START_VALUE = 1;
+    public static final int SELECT_VALUE = 1;
     /**
-     * <code>TIMEOUT_ACK = 2;</code>
+     * <code>HOST_GAME_START = 2;</code>
      */
-    public static final int TIMEOUT_ACK_VALUE = 2;
+    public static final int HOST_GAME_START_VALUE = 2;
+    /**
+     * <code>TIMEOUT_ACK = 3;</code>
+     */
+    public static final int TIMEOUT_ACK_VALUE = 3;
 
 
     public final int getNumber() {
@@ -165,9 +173,10 @@ private static final long serialVersionUID = 0L;
      */
     public static MessageType forNumber(int value) {
       switch (value) {
-        case 0: return SELECT;
-        case 1: return HOST_GAME_START;
-        case 2: return TIMEOUT_ACK;
+        case 0: return NO;
+        case 1: return SELECT;
+        case 2: return HOST_GAME_START;
+        case 3: return TIMEOUT_ACK;
         default: return null;
       }
     }
@@ -1146,7 +1155,7 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (messageType_ != google.example.GRequest.MessageType.SELECT.getNumber()) {
+    if (messageType_ != google.example.GRequest.MessageType.NO.getNumber()) {
       output.writeEnum(1, messageType_);
     }
     if (player_ != null) {
@@ -1164,7 +1173,7 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (messageType_ != google.example.GRequest.MessageType.SELECT.getNumber()) {
+    if (messageType_ != google.example.GRequest.MessageType.NO.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(1, messageType_);
     }

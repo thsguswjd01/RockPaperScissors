@@ -34,13 +34,11 @@ class MainViewModel : ViewModel() {
             request,
             object : StreamObserver<Welecom> {
                 override fun onNext(response: Welecom) {
-                    Log.d("hjhj", response.status.toString() + "\n" + response.ctype)
                     loginStatus.postValue(response.status)
                     clientType = response.ctype
                 }
 
                 override fun onError(t: Throwable) {
-                    Log.e("hjhj", t.message.toString())
                     loginStatus.postValue(Welecom.Status.UNRECOGNIZED)
                 }
 

@@ -13,6 +13,7 @@ import com.example.rockpaperscissors.MainActivity
 import com.example.rockpaperscissors.R
 import com.example.rockpaperscissors.databinding.MainFragmentBinding
 import com.example.rockpaperscissors.manage.AppManage
+import com.example.rockpaperscissors.manage.IPadress
 import com.example.rockpaperscissors.ui.game.GameFragment
 import com.example.rockpaperscissors.ui.rank.RankFragment
 import google.example.Welecom
@@ -97,7 +98,7 @@ class MainFragment : Fragment() {
         )
         viewModel.grpcLogin(
             binding.textFieldName.editText?.text.toString(),
-            binding.textFieldIp.editText?.text.toString()
+            IPadress().getIP()
         )
 
     }

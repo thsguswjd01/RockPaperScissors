@@ -77,32 +77,33 @@ public final class Game {
       "\030\002 \001(\0162\".google.example.Welecom.ClientTy" +
       "pe\"0\n\006Status\022\010\n\004WAIT\020\000\022\t\n\005READY\020\001\022\021\n\rREA" +
       "DY_IS_HOST\020\002\"!\n\nClientType\022\010\n\004HOST\020\000\022\t\n\005" +
-      "GUEST\020\001\"\302\002\n\010GRequest\0229\n\013messageType\030\001 \001(" +
+      "GUEST\020\001\"\312\002\n\010GRequest\0229\n\013messageType\030\001 \001(" +
       "\0162$.google.example.GRequest.MessageType\022" +
       "/\n\006player\030\002 \001(\0132\037.google.example.GReques" +
       "t.Player\022/\n\006select\030\003 \001(\0162\037.google.exampl" +
       "e.GRequest.Select\032\"\n\006Player\022\014\n\004name\030\001 \001(" +
-      "\t\022\n\n\002ip\030\002 \001(\t\"?\n\013MessageType\022\n\n\006SELECT\020\000" +
-      "\022\023\n\017HOST_GAME_START\020\001\022\017\n\013TIMEOUT_ACK\020\002\"4" +
-      "\n\006Select\022\010\n\004NONE\020\000\022\010\n\004ROCK\020\001\022\013\n\007SCISSOR\020" +
-      "\002\022\t\n\005PAPER\020\003\"\347\003\n\tGResponse\022:\n\013messageTyp" +
-      "e\030\001 \001(\0162%.google.example.GResponse.Messa" +
-      "geType\0220\n\006player\030\002 \003(\0132 .google.example." +
-      "GResponse.Player\0226\n\013timeoutInfo\030\003 \001(\0162!." +
-      "google.example.GResponse.Timeout\022\024\n\014time" +
-      "outCount\030\004 \001(\005\022)\n\nhostPlayer\030\005 \001(\0132\025.goo" +
-      "gle.example.Gamer\0220\n\006result\030\006 \001(\0132 .goog" +
-      "le.example.GResponse.Result\032\"\n\006Player\022\014\n" +
-      "\004name\030\001 \001(\t\022\n\n\002ip\030\002 \001(\t\032\'\n\006Result\022\016\n\006win" +
-      "ner\030\001 \003(\t\022\r\n\005point\030\002 \001(\t\"W\n\013MessageType\022" +
-      "\t\n\005START\020\000\022\013\n\007TIMEOUT\020\001\022\n\n\006RESULT\020\002\022\010\n\004D" +
-      "RAW\020\003\022\t\n\005LEAVE\020\004\022\017\n\013CHANGE_HOST\020\005\"\033\n\007Tim" +
-      "eout\022\007\n\003NOT\020\000\022\007\n\003YES\020\0012\305\001\n\016RspApplicatio" +
-      "n\0229\n\005Login\022\025.google.example.Gamer\032\027.goog" +
-      "le.example.Welecom0\001\022?\n\004Game\022\030.google.ex" +
-      "ample.GRequest\032\031.google.example.GRespons" +
-      "e(\0010\001\0227\n\004Rank\022\025.google.example.Gamer\032\030.g" +
-      "oogle.example.RankListB\002P\001b\006proto3"
+      "\t\022\n\n\002ip\030\002 \001(\t\"G\n\013MessageType\022\006\n\002NO\020\000\022\n\n\006" +
+      "SELECT\020\001\022\023\n\017HOST_GAME_START\020\002\022\017\n\013TIMEOUT" +
+      "_ACK\020\003\"4\n\006Select\022\010\n\004NONE\020\000\022\010\n\004ROCK\020\001\022\013\n\007" +
+      "SCISSOR\020\002\022\t\n\005PAPER\020\003\"\347\003\n\tGResponse\022:\n\013me" +
+      "ssageType\030\001 \001(\0162%.google.example.GRespon" +
+      "se.MessageType\0220\n\006player\030\002 \003(\0132 .google." +
+      "example.GResponse.Player\0226\n\013timeoutInfo\030" +
+      "\003 \001(\0162!.google.example.GResponse.Timeout" +
+      "\022\024\n\014timeoutCount\030\004 \001(\005\022)\n\nhostPlayer\030\005 \001" +
+      "(\0132\025.google.example.Gamer\0220\n\006result\030\006 \001(" +
+      "\0132 .google.example.GResponse.Result\032\"\n\006P" +
+      "layer\022\014\n\004name\030\001 \001(\t\022\n\n\002ip\030\002 \001(\t\032\'\n\006Resul" +
+      "t\022\016\n\006winner\030\001 \003(\t\022\r\n\005point\030\002 \001(\t\"W\n\013Mess" +
+      "ageType\022\t\n\005START\020\000\022\013\n\007TIMEOUT\020\001\022\n\n\006RESUL" +
+      "T\020\002\022\010\n\004DRAW\020\003\022\t\n\005LEAVE\020\004\022\017\n\013CHANGE_HOST\020" +
+      "\005\"\033\n\007Timeout\022\007\n\003NOT\020\000\022\007\n\003YES\020\0012\305\001\n\016RspAp" +
+      "plication\0229\n\005Login\022\025.google.example.Game" +
+      "r\032\027.google.example.Welecom0\001\022?\n\004Game\022\030.g" +
+      "oogle.example.GRequest\032\031.google.example." +
+      "GResponse(\0010\001\0227\n\004Rank\022\025.google.example.G" +
+      "amer\032\030.google.example.RankListB\002P\001b\006prot" +
+      "o3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

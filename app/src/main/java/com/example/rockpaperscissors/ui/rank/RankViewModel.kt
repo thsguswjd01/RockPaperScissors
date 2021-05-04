@@ -13,11 +13,23 @@ import io.grpc.stub.StreamObserver
 class RankViewModel : ViewModel() {
     private val clientStubFactory = AppManage.instanceStubFactory()
     var liveRankList = MutableLiveData<ArrayList<RankInfo>>()
-    private lateinit var _rankList: ArrayList<RankInfo>
+    private var _rankList = ArrayList<RankInfo>()
 
     fun getRank(gamer: Gamer) {
-        Log.d("hjhj", gamer.toString())
-        clientStubFactory.getAsyncStub().rank(gamer, object : StreamObserver<RankList> {
+        val rankList = clientStubFactory.getBlockingStub().rank(gamer)
+
+        rankList.rankerList.forEach {
+            val rankInfo = RankInfo(
+                it.name,
+                it.score.toString(),
+                it.ranking.toString()
+            )
+            _rankList.add(rankInfo)
+        }
+
+        liveRankList.postValue(_rankList)
+
+        /*clientStubFactory.getAsyncStub().rank(gamer, object : StreamObserver<RankList> {
             override fun onNext(value: RankList) {
                 Log.d("hjhj", value.toString())
                 value.rankerList.forEach {
@@ -39,7 +51,7 @@ class RankViewModel : ViewModel() {
             override fun onCompleted() {
             }
 
-        })
+        })*/
 
     }
 
